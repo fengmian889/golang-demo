@@ -1,6 +1,6 @@
-#练习需求
+# 练习需求
 用 cobra 从零建一个名为 memo 的 CLI，要求支持以下子命令与选项，且所有数据只保存在本地 JSON 文件（无需数据库）
-#必须实现的命令与功能
+# 必须实现的命令与功能
 - 新增一条备忘录；若同标题已存在，提示冲突并拒绝
 ```
 memo add -t <title> -c "<content>"
@@ -21,6 +21,6 @@ memo del <title>
 ```
 memo clean
 ```
-全局可选 flag
+# 全局可选 flag
 - --data string  指定数据文件路径（默认 ~/.memo.json）
 - --no-color     关闭所有彩色输出，方便脚本调用
