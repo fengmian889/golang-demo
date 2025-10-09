@@ -81,6 +81,7 @@ func (a *App) buildCommand() {
 
 	var namedFlagSets flag.NamedFlagSets
 	if a.options != nil {
+		//a.options为接口类型，实现了Flags()方法
 		namedFlagSets = a.options.Flags()
 		fs := cmd.Flags()
 		for _, f := range namedFlagSets.FlagSets {
