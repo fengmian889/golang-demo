@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"simple-app/pkg/app"
+	"simple-app/pkg/log"
 	"simple-app/pkg/options"
 )
 
@@ -10,9 +11,9 @@ func NewApp(basename string) *app.App {
 	opts := options.NewSimpleOptions()
 
 	application := app.NewApp("Simple IAM Server", // 应用名称
-		basename,                         // 二进制文件名
-		app.WithOptions(opts),            // 配置选项（必需）
-		app.WithRunFunc(run(opts)),       // 运行函数（必需）
+		basename,                   // 二进制文件名
+		app.WithOptions(opts),      // 配置选项（必需）
+		app.WithRunFunc(run(opts)), // 运行函数（必需）
 	)
 
 	return application
@@ -20,8 +21,8 @@ func NewApp(basename string) *app.App {
 
 func run(opts *options.SimpleOptions) app.RunFunc {
 	return func(basename string) error {
-		//log.Init(opts.Log)
-		//defer log.Flush()
+		log.Init(opts.Log)
+		defer log.Flush()
 		fmt.Printf("🚀 启动简化版 IAM 服务器...\n")
 		fmt.Printf("📋 配置信息:\n")
 		fmt.Printf("   服务器模式: %s\n", opts.ServerRunOptions.Mode)
