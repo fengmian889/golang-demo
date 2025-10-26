@@ -2,8 +2,10 @@ package options
 
 import (
 	"fmt"
-	"github.com/spf13/pflag"
 	"simple-app/pkg/flag"
+	"simple-app/pkg/log"
+
+	"github.com/spf13/pflag"
 )
 
 type CliOptions interface {
@@ -16,7 +18,7 @@ type CliOptions interface {
 type SimpleOptions struct {
 	ServerRunOptions *ServerRunOptions       `json:"server"   mapstructure:"server"`
 	InsecureServing  *InsecureServingOptions `json:"insecure" mapstructure:"insecure"`
-	//Log              *log.Options            `json:"log"      mapstructure:"log"`
+	Log              *log.Options            `json:"log"      mapstructure:"log"`
 }
 
 type ServerRunOptions struct {
@@ -43,7 +45,7 @@ func NewSimpleOptions() *SimpleOptions {
 	}
 }
 
-func (o *SimpleOptions) Flags() (fss flag.NamedFlagSets){
+func (o *SimpleOptions) Flags() (fss flag.NamedFlagSets) {
 	o.ServerRunOptions.AddFlags(fss.FlagSet("server"))
 	o.InsecureServing.AddFlags(fss.FlagSet("insecure serving"))
 	//o.Log.AddFlags(fss.FlagSet("logs"))

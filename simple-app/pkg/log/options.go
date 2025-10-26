@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/spf13/pflag"
+	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
 
@@ -83,4 +84,50 @@ func (o *Options) AddFlags(fs *pflag.FlagSet) {
 			"the behavior of DPanicLevel and takes stacktraces more liberally.",
 	)
 	fs.StringVar(&o.Name, flagName, o.Name, "The name of the logger.")
+}
+func (o *Options) Build() error {
+	var zapLevel zapcore.Level
+	if err := zapLevel.UnmarshalText([]byte(o.Level)); err != nil {
+		zapLevel = zapcore.InfoLevel
+	}
+	encodeLevel := zapcore.CapitalLevelEncoder
+	if o.Format == consoleFormat && o.EnableColor {
+		encodeLevel = zapcore.CapitalColorLevelEncoder
+	}
+
+	zc := &zap.Config{
+		Level:             zap.NewAtomicLevelAt(zapLevel),
+		Development:       o.Development,
+		DisableCaller:     o.DisableCaller,
+		DisableStacktrace: o.DisableStacktrace,
+		Sampling: &zap.SamplingConfig{
+			Initial:    100,
+			Thereafter: 100,
+		},
+		Encoding: o.Format,
+		EncoderConfig: zapcore.EncoderConfig{
+			MessageKey:     "message",
+			LevelKey:       "level",
+			TimeKey:        "timestamp",
+			NameKey:        "logger",
+			CallerKey:      "caller",
+			StacktraceKey:  "stacktrace",
+			LineEnding:     zapcore.DefaultLineEnding,
+			EncodeLevel:    encodeLevel,
+			EncodeTime:     timeEncoder,
+			EncodeDuration: milliSecondsDurationEncoder,
+			EncodeCaller:   zapcore.ShortCallerEncoder,
+			EncodeName:     zapcore.FullNameEncoder,
+		},
+		OutputPaths:      o.OutputPaths,
+		ErrorOutputPaths: o.ErrorOutputPaths,
+	}
+	logger, err := zc.Build(zap.AddStacktrace(zapcore.PanicLevel))
+	if err != nil {
+		return err
+	}
+	zap.RedirectStdLog(logger.Named(o.Name))
+	zap.ReplaceGlobals(logger)
+
+	return nil
 }

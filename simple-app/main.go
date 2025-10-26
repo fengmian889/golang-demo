@@ -28,8 +28,8 @@ func run(opts *options.SimpleOptions) app.RunFunc {
 		fmt.Printf("   服务器模式: %s\n", opts.ServerRunOptions.Mode)
 		fmt.Printf("   健康检查: %v\n", opts.ServerRunOptions.Healthz)
 		fmt.Printf("   HTTP 端口: %d\n", opts.InsecureServing.BindPort)
-		//fmt.Printf("   日志级别: %s\n", opts.Log.Level)
-		//fmt.Printf("   日志格式: %s\n", opts.Log.Format)
+		fmt.Printf("   日志级别: %s\n", opts.Log.Level)
+		fmt.Printf("   日志格式: %s\n", opts.Log.Format)
 
 		fmt.Printf("✅ 服务器已启动！\n")
 		fmt.Printf("💡 在真实的 IAM 项目中，这里会:\n")
